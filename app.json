@@ -1,15 +1,26 @@
 {
   "expo": {
-    "name": "React Native App",
-    "slug": "react-native-app",
+    "name": "Perucho's App",
+    "slug": "peruchos-app",
     "version": "1.0.0",
+    "icon": "./assets/icon.png",
     "orientation": "portrait",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#F6DEDD"
+    },
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true
     },
     "android": {
-      "package": "com.peruchos.plebeyusapp"
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#F6DEDD"
+      },
+      "package": "com.peruchos.plebeyusapp",
+      "versionCode": 1
     },
     "web": {
       "bundler": "metro"

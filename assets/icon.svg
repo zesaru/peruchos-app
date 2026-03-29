@@ -1,0 +1,12 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1024" height="1024" rx="220" fill="#F6DEDD"/>
+  <rect x="242" y="150" width="540" height="724" rx="32" fill="#D80F16"/>
+  <rect x="282" y="188" width="460" height="640" rx="18" fill="#FFFFFF"/>
+  <rect x="306" y="212" width="412" height="188" fill="#D80F16"/>
+  <rect x="306" y="418" width="412" height="188" fill="#FFFFFF"/>
+  <rect x="306" y="624" width="412" height="180" fill="#D80F16"/>
+  <text x="512" y="336" text-anchor="middle" font-size="172" font-weight="900" font-family="Arial, Helvetica, sans-serif" fill="#FFFFFF">PE</text>
+  <text x="512" y="552" text-anchor="middle" font-size="172" font-weight="900" font-family="Arial, Helvetica, sans-serif" fill="#D80F16">RU</text>
+  <text x="512" y="748" text-anchor="middle" font-size="112" font-weight="900" font-family="Arial, Helvetica, sans-serif" fill="#FFFFFF">CHO'S</text>
+  <text x="512" y="918" text-anchor="middle" font-size="62" font-weight="800" font-family="Arial, Helvetica, sans-serif" fill="#D80F16">TABERNA CRIOLLA</text>
+</svg>
