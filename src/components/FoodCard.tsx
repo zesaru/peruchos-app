@@ -52,7 +52,7 @@ const FoodCardItem = memo(function FoodCardItem({
         <Pressable
           accessibilityLabel={`${t.foodCard.addToCart} ${item.title}`}
           accessibilityRole="button"
-          className="m-1.5 overflow-hidden rounded-[22px] border border-[#ecd8d4] bg-white"
+          className="m-1 overflow-hidden rounded-[20px] border border-[#ecd8d4] bg-white"
           hitSlop={12}
           onPress={() => onSelectItem(item)}
           onPressIn={() => {
@@ -80,16 +80,34 @@ const FoodCardItem = memo(function FoodCardItem({
             ) : null}
           </View>
 
-          <View className="gap-3 p-4">
+          <View className="gap-3 p-3.5">
+            <View className="flex-row items-center justify-between gap-2">
+              <Text
+                className="flex-1 text-[11px] uppercase tracking-[1px] text-[#9a938d]"
+                numberOfLines={1}
+                style={{ fontFamily: "Inter_800ExtraBold" }}
+              >
+                {item.category}
+              </Text>
+              <Text
+                className="text-[11px] text-[#9a938d]"
+                style={{ fontFamily: "Inter_700Bold" }}
+              >
+                {item.prepTime}
+              </Text>
+            </View>
+
             <Text
-              className="text-[22px] text-[#22201e]"
+              className="text-[19px] text-[#22201e]"
+              numberOfLines={2}
               style={{ fontFamily: "Inter_800ExtraBold" }}
             >
               {item.title}
             </Text>
 
             <Text
-              className="min-h-[40px] text-[13px] leading-5 text-[#8c857f]"
+              className="min-h-[36px] text-[12px] leading-5 text-[#8c857f]"
+              numberOfLines={2}
               style={{ fontFamily: "Inter_500Medium" }}
             >
               {item.description}
@@ -97,14 +115,14 @@ const FoodCardItem = memo(function FoodCardItem({
 
             <View className="flex-row items-center justify-between">
               <Text
-                className="text-[24px] text-[#1f1f1f]"
+                className="text-[21px] text-[#1f1f1f]"
                 style={{ fontFamily: "Inter_800ExtraBold" }}
               >
                 {formatJPY(item.price)}
               </Text>
-              <View className="h-11 w-11 items-center justify-center rounded-full bg-[#d80f16] shadow-sm">
+              <View className="h-10 w-10 items-center justify-center rounded-full bg-[#d80f16] shadow-sm">
                 <Text
-                  className="text-[22px] text-white"
+                  className="text-[20px] text-white"
                   style={{ fontFamily: "Inter_800ExtraBold" }}
                 >
                   +
@@ -130,7 +148,7 @@ export function FoodCard({ data, numColumns, onSelectItem }: FoodCardProps) {
 
   return (
     <FlashList
-      contentContainerStyle={{ paddingBottom: 24 }}
+      contentContainerStyle={{ paddingBottom: 24, paddingTop: 4 }}
       data={data}
       key={`menu-${numColumns}`}
       keyExtractor={keyExtractor}

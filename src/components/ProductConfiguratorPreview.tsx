@@ -45,27 +45,72 @@ export function ProductConfiguratorPreview({
     return null;
   }
 
+  const optionValues = {
+    fullIce: t.configurator.valueFullIce,
+    fullRice: t.configurator.valueFullRice,
+    halfRice: t.configurator.valueHalfRice,
+    hot: t.configurator.valueHot,
+    large: t.configurator.valueLarge,
+    lightIce: t.configurator.valueLightIce,
+    medium: t.configurator.valueMedium,
+    mild: t.configurator.valueMild,
+    noIce: t.configurator.valueNoIce,
+    noRice: t.configurator.valueNoRice,
+    regular: t.configurator.valueRegular,
+  };
+
   const optionGroups =
     item.macroCategory === "drinks"
       ? [
-          { label: t.configurator.optionSize, options: ["Small", "Regular", "Large"] },
-          { label: t.configurator.optionIce, options: ["No Ice", "Light Ice", "Regular Ice"] },
+          {
+            label: t.configurator.optionSize,
+            options: [
+              { id: "regular", label: optionValues.regular },
+              { id: "large", label: optionValues.large },
+            ],
+          },
+          {
+            label: t.configurator.optionIce,
+            options: [
+              { id: "no-ice", label: optionValues.noIce },
+              { id: "light-ice", label: optionValues.lightIce },
+              { id: "full-ice", label: optionValues.fullIce },
+            ],
+          },
         ]
       : [
-          { label: t.configurator.optionRice, options: ["No Rice", "Half Rice", "Full Rice"] },
-          { label: t.configurator.optionSpice, options: ["Mild", "Medium", "Hot"] },
+          {
+            label: t.configurator.optionRice,
+            options: [
+              { id: "no-rice", label: optionValues.noRice },
+              { id: "half-rice", label: optionValues.halfRice },
+              { id: "full-rice", label: optionValues.fullRice },
+            ],
+          },
+          {
+            label: t.configurator.optionSpice,
+            options: [
+              { id: "mild", label: optionValues.mild },
+              { id: "medium", label: optionValues.medium },
+              { id: "hot", label: optionValues.hot },
+            ],
+          },
         ];
 
-  function selectOption(groupLabel: string, option: string) {
+  function buildOptionValue(groupLabel: string, optionLabel: string) {
+    return `${groupLabel}: ${optionLabel}`;
+  }
+
+  function selectOption(groupLabel: string, optionLabel: string) {
     setSelectedOptions((current) => {
       const next = current.filter((entry) => !entry.startsWith(`${groupLabel}:`));
-      next.push(`${groupLabel}: ${option}`);
+      next.push(buildOptionValue(groupLabel, optionLabel));
       return next;
     });
   }
 
-  function isSelected(groupLabel: string, option: string) {
-    return selectedOptions.includes(`${groupLabel}: ${option}`);
+  function isSelected(groupLabel: string, optionLabel: string) {
+    return selectedOptions.includes(buildOptionValue(groupLabel, optionLabel));
   }
 
   return (
@@ -152,16 +197,16 @@ export function ProductConfiguratorPreview({
                     </Text>
                     <View className="flex-row flex-wrap gap-2">
                       {group.options.map((option) => {
-                        const active = isSelected(group.label, option);
+                        const active = isSelected(group.label, option.label);
 
                         return (
                           <Pressable
-                            key={option}
+                            key={option.id}
                             className={`rounded-full px-4 py-2 ${
                               active ? "bg-[#d80f16]" : "bg-white"
                             }`}
                             hitSlop={10}
-                            onPress={() => selectOption(group.label, option)}
+                            onPress={() => selectOption(group.label, option.label)}
                           >
                             <Text
                               className={`text-[13px] ${
@@ -169,7 +214,7 @@ export function ProductConfiguratorPreview({
                               }`}
                               style={{ fontFamily: "Inter_700Bold" }}
                             >
-                              {option}
+                              {option.label}
                             </Text>
                           </Pressable>
                         );

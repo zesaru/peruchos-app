@@ -8,9 +8,13 @@ type TranslationShape = {
     table: string;
     noItemsYet: string;
     addDishesPrompt: string;
+    emptyCta: string;
+    itemsLabel: string;
     placeOrder: string;
     searchPlaceholder: string;
+    subtotalLabel: string;
     allCategory: string;
+    totalLabel: string;
     historyShort: string;
     macroAll: string;
     macroFood: string;
@@ -38,6 +42,17 @@ type TranslationShape = {
     optionRice: string;
     optionSize: string;
     optionSpice: string;
+    valueFullRice: string;
+    valueHalfRice: string;
+    valueFullIce: string;
+    valueHot: string;
+    valueLarge: string;
+    valueLightIce: string;
+    valueMedium: string;
+    valueMild: string;
+    valueNoIce: string;
+    valueNoRice: string;
+    valueRegular: string;
     quantity: string;
     title: string;
   };
@@ -79,9 +94,13 @@ export const translations: Record<AppLanguage, TranslationShape> = {
       table: "Mesa",
       noItemsYet: "Aún no hay items",
       addDishesPrompt: "Agrega platos del menú para construir la orden.",
+      emptyCta: "Agrega platos para continuar",
+      itemsLabel: "Items",
       placeOrder: "Hacer pedido",
       searchPlaceholder: "Busca tu comida favorita",
+      subtotalLabel: "Subtotal",
       allCategory: "Todo",
+      totalLabel: "Total",
       historyShort: "H",
       macroAll: "Todo",
       macroFood: "Cocina Peruana",
@@ -109,6 +128,17 @@ export const translations: Record<AppLanguage, TranslationShape> = {
       optionRice: "Arroz",
       optionSize: "Tamaño",
       optionSpice: "Picante",
+      valueFullIce: "Hielo normal",
+      valueFullRice: "Arroz completo",
+      valueHalfRice: "Medio arroz",
+      valueHot: "Alto",
+      valueLarge: "Grande",
+      valueLightIce: "Poco hielo",
+      valueMedium: "Medio",
+      valueMild: "Suave",
+      valueNoIce: "Sin hielo",
+      valueNoRice: "Sin arroz",
+      valueRegular: "Regular",
       quantity: "Cantidad",
       title: "Configurar pedido",
     },
@@ -156,9 +186,13 @@ export const translations: Record<AppLanguage, TranslationShape> = {
       table: "Table",
       noItemsYet: "No items yet",
       addDishesPrompt: "Add dishes from the menu to build the order.",
+      emptyCta: "Add dishes to continue",
+      itemsLabel: "Items",
       placeOrder: "Place Order",
       searchPlaceholder: "Search your favorite food",
+      subtotalLabel: "Subtotal",
       allCategory: "All",
+      totalLabel: "Total",
       historyShort: "H",
       macroAll: "All",
       macroFood: "Peruvian Cuisine",
@@ -186,6 +220,17 @@ export const translations: Record<AppLanguage, TranslationShape> = {
       optionRice: "Rice",
       optionSize: "Size",
       optionSpice: "Spice",
+      valueFullIce: "Regular Ice",
+      valueFullRice: "Full Rice",
+      valueHalfRice: "Half Rice",
+      valueHot: "Hot",
+      valueLarge: "Large",
+      valueLightIce: "Light Ice",
+      valueMedium: "Medium",
+      valueMild: "Mild",
+      valueNoIce: "No Ice",
+      valueNoRice: "No Rice",
+      valueRegular: "Regular",
       quantity: "Quantity",
       title: "Configurator",
     },
@@ -233,9 +278,13 @@ export const translations: Record<AppLanguage, TranslationShape> = {
       table: "テーブル",
       noItemsYet: "まだ商品がありません",
       addDishesPrompt: "メニューから料理を追加して注文を作成してください。",
+      emptyCta: "料理を追加して続行",
+      itemsLabel: "商品数",
       placeOrder: "注文する",
       searchPlaceholder: "料理を検索",
+      subtotalLabel: "小計",
       allCategory: "すべて",
+      totalLabel: "合計",
       historyShort: "履",
       macroAll: "すべて",
       macroFood: "ペルー料理",
@@ -263,6 +312,17 @@ export const translations: Record<AppLanguage, TranslationShape> = {
       optionRice: "ご飯",
       optionSize: "サイズ",
       optionSpice: "辛さ",
+      valueFullIce: "通常の氷",
+      valueFullRice: "普通盛り",
+      valueHalfRice: "半分",
+      valueHot: "辛口",
+      valueLarge: "大",
+      valueLightIce: "少なめ",
+      valueMedium: "中辛",
+      valueMild: "控えめ",
+      valueNoIce: "氷なし",
+      valueNoRice: "ご飯なし",
+      valueRegular: "普通",
       quantity: "数量",
       title: "設定",
     },

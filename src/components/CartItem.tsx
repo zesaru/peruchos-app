@@ -32,13 +32,13 @@ export function CartItem({ item }: CartItemProps) {
   return (
     <Animated.View
       entering={FadeInRight.duration(220)}
-      className="gap-3 rounded-[20px] border border-[#f1ece9] bg-white p-3"
+      className="gap-3 rounded-[18px] border border-[#f1ece9] bg-white p-3"
     >
       <View className="flex-row gap-3">
-        <View className="h-16 w-16 overflow-hidden rounded-[14px]">
+        <View className="h-14 w-14 overflow-hidden rounded-[12px]">
           <RemoteImageCard
             fallbackUri={thumb}
-            heightClassName="h-16"
+            heightClassName="h-14"
             uri={item.image}
           />
         </View>
@@ -46,28 +46,24 @@ export function CartItem({ item }: CartItemProps) {
         <View className="flex-1 gap-1">
           <View className="flex-row items-start justify-between gap-2">
             <Text
-              className="flex-1 text-[17px] text-[#232120]"
+              className="flex-1 text-[15px] text-[#232120]"
+              numberOfLines={2}
               style={{ fontFamily: "Inter_800ExtraBold" }}
             >
               {item.title}
             </Text>
             <Text
-              className="text-[11px] text-[#1692f5]"
+              className="text-[10px] uppercase tracking-[0.8px] text-[#1692f5]"
               style={{ fontFamily: "Inter_700Bold" }}
             >
               {t.cart.edit}
             </Text>
           </View>
 
-          <Text
-            className="text-[12px] text-[#8c857f]"
-            style={{ fontFamily: "Inter_500Medium" }}
-          >
-            {item.note || t.cart.noNoteAdded}
-          </Text>
           {selectedOptions.length > 0 ? (
             <Text
               className="text-[12px] text-[#8c857f]"
+              numberOfLines={1}
               style={{ fontFamily: "Inter_500Medium" }}
             >
               {t.cart.optionsPrefix} {selectedOptions.join(" · ")}
@@ -76,13 +72,13 @@ export function CartItem({ item }: CartItemProps) {
 
           <View className="mt-1 flex-row items-center justify-between">
             <Text
-              className="text-[18px] text-[#22201e]"
+              className="text-[17px] text-[#22201e]"
               style={{ fontFamily: "Inter_800ExtraBold" }}
             >
               {formatJPY(item.price * item.quantity)}
             </Text>
 
-            <View className="flex-row items-center gap-2 rounded-full bg-[#f5f5f5] px-2 py-1">
+            <View className="flex-row items-center gap-1.5 rounded-full bg-[#f5f5f5] px-2 py-1">
               <Pressable
                 accessibilityLabel={`${t.cart.decrease} ${item.title}`}
                 accessibilityRole="button"
@@ -124,7 +120,7 @@ export function CartItem({ item }: CartItemProps) {
 
       <TextInput
         blurOnSubmit
-        className="rounded-2xl bg-[#faf7f5] px-4 py-3 text-[13px] text-[#232120]"
+        className="rounded-2xl bg-[#faf7f5] px-4 py-3 text-[12px] text-[#232120]"
         multiline
         onBlur={() => updateNote(item.lineId, draftNote)}
         onChangeText={setDraftNote}
