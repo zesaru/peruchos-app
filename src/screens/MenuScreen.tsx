@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -197,7 +197,11 @@ export function MenuScreen() {
               </View>
             </View>
 
-            <View className="flex-1 gap-3 py-4">
+            <ScrollView
+              className="flex-1 py-4"
+              contentContainerClassName="gap-3"
+              showsVerticalScrollIndicator={false}
+            >
               {cartItems.length === 0 ? (
                 <View className="rounded-[22px] bg-[#faf6f4] p-4">
                   <Text className="text-[16px] text-[#232120]" style={{ fontFamily: "Inter_800ExtraBold" }}>
@@ -210,7 +214,7 @@ export function MenuScreen() {
               ) : (
                 cartItems.map((item) => <CartItem key={item.lineId} item={item} />)
               )}
-            </View>
+            </ScrollView>
 
             <View className="gap-3 border-t border-[#efebe8] pt-4">
               <View className="gap-2 rounded-[20px] bg-[#faf6f4] px-4 py-4">
