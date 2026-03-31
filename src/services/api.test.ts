@@ -370,5 +370,10 @@ describe("api service behavior", () => {
       selectedOptions: ["Spice: Mild"],
       title: "Lomo Saltado",
     });
+    expect(created.draft).toEqual({
+      customerName: "Cesar",
+      orderType: "Dine In",
+      tableNumber: "12",
+    });
   });
 });

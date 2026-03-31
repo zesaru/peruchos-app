@@ -473,8 +473,11 @@ export async function createOrder(input: {
       },
       draft: {
         ...parsed.draft,
+        ...input.draft,
         tableNumber:
-          parsed.draft.tableNumber || (linkedTable?.table_number ? String(linkedTable.table_number) : ""),
+          parsed.draft.tableNumber ||
+          input.draft.tableNumber ||
+          (linkedTable?.table_number ? String(linkedTable.table_number) : ""),
       },
       status: normalizeOrderStatus(data.kitchen_status),
     };
