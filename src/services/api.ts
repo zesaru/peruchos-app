@@ -52,6 +52,26 @@ type OrderRow = {
   tables?: TableRow | TableRow[] | null;
 };
 
+type LegacyOrderProduct = {
+  id?: number | string;
+  image?: string | null;
+  image_path?: string | null;
+  macroCategory?: string;
+  category?: string;
+  name?: string;
+  nameEs?: string;
+  nameEn?: string;
+  nameJa?: string;
+  title?: string;
+  description?: string;
+  prepTime?: string;
+  price?: number | string;
+  quantity?: number;
+  note?: string;
+  notes?: string;
+  selectedOptions?: string[];
+};
+
 const NETWORK_DELAY_MS = 120;
 
 function wait(duration = NETWORK_DELAY_MS) {
@@ -107,6 +127,13 @@ function parseOrderProducts(value: unknown): {
     return { draft: fallbackDraft, items: [] };
   }
 
+  if (Array.isArray(value)) {
+    return {
+      draft: fallbackDraft,
+      items: value.map((item, index) => normalizeLegacyOrderProduct(item as LegacyOrderProduct, index)),
+    };
+  }
+
   const products = value as {
     draft?: Partial<CheckoutDraft>;
     items?: CartEntry[];
@@ -120,6 +147,44 @@ function parseOrderProducts(value: unknown): {
     items: Array.isArray(products.items)
       ? products.items.map((item, index) => normalizeCartEntry(item, index))
       : [],
+  };
+}
+
+function normalizeLegacyOrderProduct(item: LegacyOrderProduct, index = 0): CartEntry {
+  const title =
+    item.title ??
+    item.name ??
+    item.nameEs ??
+    item.nameEn ??
+    item.nameJa ??
+    "";
+  const baseId = item.id != null ? String(item.id) : `legacy-${index}`;
+  const numericPrice =
+    typeof item.price === "number"
+      ? item.price
+      : typeof item.price === "string"
+        ? Number(item.price)
+        : 0;
+  const image =
+    typeof item.image === "string" && item.image.length > 0
+      ? item.image
+      : typeof item.image_path === "string" && item.image_path.length > 0
+        ? supabase.storage.from("dishes").getPublicUrl(item.image_path).data.publicUrl
+        : undefined;
+
+  return {
+    category: item.category ?? "",
+    description: item.description ?? "",
+    id: baseId,
+    image,
+    lineId: `${baseId}-${index}`,
+    macroCategory: item.macroCategory ?? "food",
+    note: typeof item.note === "string" ? item.note : typeof item.notes === "string" ? item.notes : "",
+    prepTime: item.prepTime ?? "15 min",
+    price: Number.isFinite(numericPrice) ? numericPrice : 0,
+    quantity: typeof item.quantity === "number" && item.quantity > 0 ? item.quantity : 1,
+    selectedOptions: Array.isArray(item.selectedOptions) ? item.selectedOptions : [],
+    title,
   };
 }
 
@@ -151,6 +216,22 @@ function normalizeSubmittedOrder(order: SubmittedOrder): SubmittedOrder {
     summary: { ...order.summary },
     draft: { ...order.draft },
   };
+}
+
+function serializeOrderProducts(items: SubmittedOrder["items"]): LegacyOrderProduct[] {
+  return items.map((item) => ({
+    id: /^\d+$/u.test(item.id) ? Number(item.id) : item.id,
+    image: item.image,
+    category: item.category,
+    macroCategory: item.macroCategory,
+    name: item.title,
+    notes: item.note || undefined,
+    prepTime: item.prepTime,
+    price: item.price,
+    quantity: item.quantity,
+    selectedOptions: item.selectedOptions,
+    title: item.title,
+  }));
 }
 
 function formatPrepTime(minutes: number | null) {
@@ -365,10 +446,7 @@ export async function createOrder(input: {
     time: now.toTimeString().slice(0, 5),
     total,
     table_id: tableId,
-    products: {
-      draft: input.draft,
-      items: input.items.map((item) => normalizeCartEntry(item)),
-    },
+    products: serializeOrderProducts(input.items),
   };
 
   try {
@@ -395,8 +473,11 @@ export async function createOrder(input: {
       },
       draft: {
         ...parsed.draft,
+        ...input.draft,
         tableNumber:
-          parsed.draft.tableNumber || (linkedTable?.table_number ? String(linkedTable.table_number) : ""),
+          parsed.draft.tableNumber ||
+          input.draft.tableNumber ||
+          (linkedTable?.table_number ? String(linkedTable.table_number) : ""),
       },
       status: normalizeOrderStatus(data.kitchen_status),
     };
