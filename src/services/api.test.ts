@@ -49,7 +49,7 @@ describe("api service behavior", () => {
     expect(payload.items.length).toBeGreaterThan(0);
   });
 
-  it("maps fetched orders and normalizes legacy items missing selectedOptions", async () => {
+  it("maps fetched orders from legacy array products and normalizes missing selectedOptions", async () => {
     mockFrom.mockImplementation((table: string) => {
       if (table !== "orders") {
         throw new Error(`Unexpected table ${table}`);
@@ -63,24 +63,16 @@ describe("api service behavior", () => {
                 created_at: "2026-03-30T12:00:00.000Z",
                 id: 77,
                 kitchen_status: "ready",
-                products: {
-                  draft: {
-                    customerName: "Cesar",
-                    orderType: "Dine In",
-                    tableNumber: "",
+                products: [
+                  {
+                    category: "Bebida",
+                    id: "dish-1",
+                    name: "Inca Kola",
+                    notes: "",
+                    price: 1600,
+                    quantity: 2,
                   },
-                  items: [
-                    {
-                      category: "Bebida",
-                      description: "Gaseosa",
-                      id: "dish-1",
-                      note: "",
-                      price: 1600,
-                      quantity: 2,
-                      title: "Inca Kola",
-                    },
-                  ],
-                },
+                ],
                 table_id: 12,
                 tables: { id: 12, table_number: 12 },
                 total: 3200,
@@ -105,6 +97,7 @@ describe("api service behavior", () => {
       },
     });
     expect(orders[0].draft.tableNumber).toBe("12");
+    expect(orders[0].draft.customerName).toBe("");
     expect(orders[0].items[0].selectedOptions).toEqual([]);
     expect(orders[0].items[0].lineId).toBe("dish-1-0");
   });
@@ -277,5 +270,105 @@ describe("api service behavior", () => {
     expect(created.summary).toEqual(input.summary);
     expect(created.draft).toEqual(input.draft);
     expect(created.items).toEqual(input.items);
+  });
+
+  it("writes products as a legacy-compatible array when creating an order", async () => {
+    const insertSingle = jest.fn().mockResolvedValue({
+      data: {
+        id: 200,
+        created_at: "2026-03-30T10:00:00.000Z",
+        total: 3200,
+        products: [
+          {
+            id: 163,
+            name: "Lomo Saltado",
+            notes: "sin cebolla",
+            price: 3200,
+            quantity: 1,
+            selectedOptions: ["Spice: Mild"],
+          },
+        ],
+        kitchen_status: "pending",
+        table_id: 12,
+        tables: { id: 12, table_number: 12 },
+      },
+      error: null,
+    });
+
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "tables") {
+        return {
+          select: jest.fn(() => ({
+            eq: jest.fn(() => ({
+              maybeSingle: jest.fn().mockResolvedValue({
+                data: { id: 12, table_number: 12 },
+              }),
+            })),
+          })),
+        };
+      }
+
+      if (table === "orders") {
+        return {
+          insert: jest.fn((payload: Record<string, unknown>) => {
+            expect(payload.products).toEqual([
+              expect.objectContaining({
+                id: 163,
+                name: "Lomo Saltado",
+                notes: "sin cebolla",
+                price: 3200,
+                quantity: 1,
+                selectedOptions: ["Spice: Mild"],
+              }),
+            ]);
+
+            return {
+              select: jest.fn(() => ({
+                single: insertSingle,
+              })),
+            };
+          }),
+        };
+      }
+
+      throw new Error(`Unexpected table ${table}`);
+    });
+
+    const { createOrder } = loadApi();
+    const created = await createOrder({
+      draft: {
+        customerName: "Cesar",
+        orderType: "Dine In",
+        tableNumber: "12",
+      },
+      items: [
+        {
+          category: "Platos Principales",
+          description: "Salteado criollo",
+          id: "163",
+          lineId: "163-a",
+          macroCategory: "food",
+          note: "sin cebolla",
+          prepTime: "25 min",
+          price: 3200,
+          quantity: 1,
+          selectedOptions: ["Spice: Mild"],
+          title: "Lomo Saltado",
+        },
+      ],
+      summary: {
+        itemCount: 1,
+        subtotal: 3200,
+      },
+    });
+
+    expect(created.id).toBe("200");
+    expect(created.items[0]).toMatchObject({
+      id: "163",
+      note: "sin cebolla",
+      quantity: 1,
+      selectedOptions: ["Spice: Mild"],
+      title: "Lomo Saltado",
+    });
   });
 });
