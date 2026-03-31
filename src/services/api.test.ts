@@ -205,6 +205,44 @@ describe("api service behavior", () => {
     expect(result).toEqual(existingOrders);
   });
 
+  it("keeps existing local orders when Supabase returns an empty list", async () => {
+    const existingOrders: SubmittedOrder[] = [
+      {
+        id: "order-2",
+        createdAt: "2026-03-30T01:00:00.000Z",
+        items: [
+          {
+            category: "Bebida",
+            description: "Gaseosa",
+            id: "drink-1",
+            lineId: "drink-1-0",
+            macroCategory: "drinks",
+            note: "",
+            prepTime: "1 min",
+            price: 1600,
+            quantity: 1,
+            selectedOptions: [],
+            title: "Inca Kola",
+          },
+        ],
+        summary: { itemCount: 1, subtotal: 1600 },
+        draft: { customerName: "Cesar", orderType: "Dine In", tableNumber: "12" },
+        status: "pending",
+      },
+    ];
+
+    mockFrom.mockReturnValue({
+      select: jest.fn(() => ({
+        order: jest.fn().mockResolvedValue({ data: [], error: null }),
+      })),
+    });
+
+    const { fetchOrders } = loadApi();
+    const result = await fetchOrders(existingOrders);
+
+    expect(result).toEqual(existingOrders);
+  });
+
   it("returns a local fallback order when the insert fails", async () => {
     mockFrom.mockImplementation((table: string) => {
       if (table === "tables") {

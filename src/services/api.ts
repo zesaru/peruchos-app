@@ -406,6 +406,10 @@ export async function fetchOrders(existingOrders: SubmittedOrder[]): Promise<Sub
       return existingOrders.map(normalizeSubmittedOrder);
     }
 
+    if (data.length === 0 && existingOrders.length > 0) {
+      return existingOrders.map(normalizeSubmittedOrder);
+    }
+
     return (data as OrderRow[]).map((order) => {
       const parsed = parseOrderProducts(order.products);
       const linkedTable = Array.isArray(order.tables) ? order.tables[0] : order.tables;
