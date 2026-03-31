@@ -183,7 +183,7 @@ describe("api service behavior", () => {
 
   it("resolves a table from QR-style URL payloads", async () => {
     mockFrom.mockImplementation((table: string) => {
-      if (table !== "tables") {
+      if (table !== "table_lookup") {
         throw new Error(`Unexpected table ${table}`);
       }
 
@@ -209,7 +209,7 @@ describe("api service behavior", () => {
 
   it("resolves a table from JSON QR payloads", async () => {
     mockFrom.mockImplementation((table: string) => {
-      if (table !== "tables") {
+      if (table !== "table_lookup") {
         throw new Error(`Unexpected table ${table}`);
       }
 
@@ -297,7 +297,7 @@ describe("api service behavior", () => {
 
   it("returns a local fallback order when the insert fails", async () => {
     mockFrom.mockImplementation((table: string) => {
-      if (table === "tables") {
+      if (table === "table_lookup") {
         return {
           select: jest.fn(() => ({
             eq: jest.fn(() => ({
@@ -386,7 +386,7 @@ describe("api service behavior", () => {
     });
 
     mockFrom.mockImplementation((table: string) => {
-      if (table === "tables") {
+      if (table === "table_lookup") {
         return {
           select: jest.fn(() => ({
             eq: jest.fn(() => ({

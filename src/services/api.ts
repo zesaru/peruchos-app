@@ -356,7 +356,7 @@ export async function resolveTableByNumber(tableReference: string): Promise<Assi
   }
 
   const { data } = await supabase
-    .from("tables")
+    .from("table_lookup")
     .select("id, table_number")
     .eq("table_number", parsed)
     .maybeSingle<TableRow>();

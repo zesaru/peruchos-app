@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { Modal, Pressable, Text, TextInput, View } from "react-native";
+import { Modal, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { formatJPY } from "../lib/currency";
 import { getTranslations } from "../i18n/translations";
+import { useResponsive } from "../hooks/useResponsive";
 import { RemoteImageCard } from "./RemoteImageCard";
 import { useAppSettingsStore } from "../store/useAppSettingsStore";
 import { useCartStore } from "../store/useCartStore";
@@ -25,6 +27,7 @@ export function ProductConfiguratorPreview({
   visible,
 }: ProductConfiguratorPreviewProps) {
   const language = useAppSettingsStore((state) => state.language);
+  const { isTablet } = useResponsive();
   const t = getTranslations(language);
   const addConfiguredItem = useCartStore((state) => state.addConfiguredItem);
   const [draftNote, setDraftNote] = useState("");
@@ -114,135 +117,184 @@ export function ProductConfiguratorPreview({
   }
 
   return (
-    <Modal animationType="fade" onRequestClose={onClose} transparent visible={visible}>
-      <View className="flex-1 items-center justify-center bg-black/35 px-6">
-        <View className="w-full max-w-[430px] overflow-hidden rounded-[30px] border border-[#f0e9e5] bg-white shadow-sm">
-          <RemoteImageCard
-            fallbackUri={fallbackImage}
-            heightClassName="h-56"
-            uri={item.image}
-          />
-
-          <View className="gap-4 p-5">
-            <View className="gap-2">
-              <Text
-                className="text-[24px] text-[#231f20]"
-                style={{ fontFamily: "Inter_800ExtraBold" }}
-              >
-                {item.title}
-              </Text>
-              <Text
-                className="text-[14px] leading-6 text-[#8c857f]"
-                style={{ fontFamily: "Inter_500Medium" }}
-              >
-                {item.description}
-              </Text>
-            </View>
-
-            <View className="rounded-[20px] bg-[#faf7f5] p-4">
+    <Modal animationType="slide" onRequestClose={onClose} visible={visible}>
+      <SafeAreaView className="flex-1 bg-[#fff8f7]">
+        <View className="flex-1 bg-[#fff8f7]">
+          <View className="flex-row items-center justify-between border-b border-[#efe7e3] px-5 py-4">
+            <View>
               <Text
                 className="text-[12px] uppercase tracking-[1.6px] text-[#d80f16]"
                 style={{ fontFamily: "Inter_800ExtraBold" }}
               >
                 {t.configurator.title}
               </Text>
-              <View className="mt-3 flex-row items-center justify-between">
-                <Text
-                  className="text-[14px] text-[#5f5954]"
-                  style={{ fontFamily: "Inter_500Medium" }}
-                >
-                  {t.configurator.quantity}
-                </Text>
-                <View className="flex-row items-center gap-3 rounded-full bg-white px-2 py-2">
-                  <Pressable
-                    className="h-9 w-9 items-center justify-center rounded-full bg-[#f3efed]"
-                    hitSlop={12}
-                    onPress={() => setQuantity((current) => Math.max(1, current - 1))}
-                  >
-                    <Text
-                      className="text-[18px] text-[#231f20]"
-                      style={{ fontFamily: "Inter_800ExtraBold" }}
-                    >
-                      -
-                    </Text>
-                  </Pressable>
-                  <Text
-                    className="min-w-[24px] text-center text-[16px] text-[#231f20]"
-                    style={{ fontFamily: "Inter_800ExtraBold" }}
-                  >
-                    {quantity}
-                  </Text>
-                  <Pressable
-                    className="h-9 w-9 items-center justify-center rounded-full bg-[#f3efed]"
-                    hitSlop={12}
-                    onPress={() => setQuantity((current) => current + 1)}
-                  >
-                    <Text
-                      className="text-[18px] text-[#231f20]"
-                      style={{ fontFamily: "Inter_800ExtraBold" }}
-                    >
-                      +
-                    </Text>
-                  </Pressable>
-                </View>
-              </View>
-              <View className="mt-4 gap-4">
-                {optionGroups.map((group) => (
-                  <View key={group.label} className="gap-2">
-                    <Text
-                      className="text-[13px] text-[#5f5954]"
-                      style={{ fontFamily: "Inter_700Bold" }}
-                    >
-                      {group.label}
-                    </Text>
-                    <View className="flex-row flex-wrap gap-2">
-                      {group.options.map((option) => {
-                        const active = isSelected(group.label, option.label);
-
-                        return (
-                          <Pressable
-                            key={option.id}
-                            className={`rounded-full px-4 py-2 ${
-                              active ? "bg-[#d80f16]" : "bg-white"
-                            }`}
-                            hitSlop={10}
-                            onPress={() => selectOption(group.label, option.label)}
-                          >
-                            <Text
-                              className={`text-[13px] ${
-                                active ? "text-white" : "text-[#231f20]"
-                              }`}
-                              style={{ fontFamily: "Inter_700Bold" }}
-                            >
-                              {option.label}
-                            </Text>
-                          </Pressable>
-                        );
-                      })}
-                    </View>
-                  </View>
-                ))}
-              </View>
-              <TextInput
-                className="mt-4 min-h-[92px] rounded-2xl bg-white px-4 py-4 text-[14px] text-[#231f20]"
-                multiline
-                onChangeText={setDraftNote}
-                placeholder={t.configurator.kitchenNote}
-                placeholderTextColor="#9f9691"
-                textAlignVertical="top"
-                value={draftNote}
-              />
-            </View>
-
-            <View className="gap-4">
               <Text
-                className="text-[28px] text-[#231f20]"
+                className="mt-1 text-[22px] text-[#231f20]"
                 style={{ fontFamily: "Inter_800ExtraBold" }}
               >
-                {formatJPY(item.price * quantity)}
+                {item.title}
               </Text>
+            </View>
+            <Pressable
+              className="rounded-full bg-[#f3efed] px-4 py-3"
+              hitSlop={12}
+              onPress={onClose}
+            >
+              <Text
+                className="text-[14px] text-[#231f20]"
+                style={{ fontFamily: "Inter_800ExtraBold" }}
+              >
+                {t.adminUnlock.cancel}
+              </Text>
+            </Pressable>
+          </View>
+
+          <ScrollView
+            className="flex-1"
+            contentContainerClassName="gap-5 px-5 py-5"
+            showsVerticalScrollIndicator={false}
+          >
+            <View className={isTablet ? "flex-row items-start gap-6" : "gap-5"}>
+              <View className={isTablet ? "flex-1 gap-4" : "gap-5"}>
+                <RemoteImageCard
+                  fallbackUri={fallbackImage}
+                  heightClassName={isTablet ? "h-[520px]" : "h-72"}
+                  uri={item.image}
+                />
+                <View className="gap-2">
+                  <Text
+                    className="text-[16px] leading-7 text-[#5f5954]"
+                    style={{ fontFamily: "Inter_500Medium" }}
+                  >
+                    {item.description}
+                  </Text>
+                  <Text
+                    className="text-[14px] text-[#8c857f]"
+                    style={{ fontFamily: "Inter_700Bold" }}
+                  >
+                    {item.category} · {item.prepTime}
+                  </Text>
+                </View>
+              </View>
+
+              <View className={isTablet ? "min-w-0 flex-1" : ""}>
+                <View className="rounded-[24px] bg-white p-5">
+                  <Text
+                    className="text-[32px] text-[#231f20]"
+                    style={{ fontFamily: "Inter_800ExtraBold" }}
+                  >
+                    {formatJPY(item.price * quantity)}
+                  </Text>
+
+                  <View className="flex-row items-center justify-between">
+                    <Text
+                      className="text-[15px] text-[#5f5954]"
+                      style={{ fontFamily: "Inter_700Bold" }}
+                    >
+                      {t.configurator.quantity}
+                    </Text>
+                    <View className="flex-row items-center gap-3 rounded-full bg-[#faf7f5] px-2 py-2">
+                      <Pressable
+                        className="h-10 w-10 items-center justify-center rounded-full bg-white"
+                        hitSlop={12}
+                        onPress={() => setQuantity((current) => Math.max(1, current - 1))}
+                      >
+                        <Text
+                          className="text-[18px] text-[#231f20]"
+                          style={{ fontFamily: "Inter_800ExtraBold" }}
+                        >
+                          -
+                        </Text>
+                      </Pressable>
+                      <Text
+                        className="min-w-[28px] text-center text-[18px] text-[#231f20]"
+                        style={{ fontFamily: "Inter_800ExtraBold" }}
+                      >
+                        {quantity}
+                      </Text>
+                      <Pressable
+                        className="h-10 w-10 items-center justify-center rounded-full bg-white"
+                        hitSlop={12}
+                        onPress={() => setQuantity((current) => current + 1)}
+                      >
+                        <Text
+                          className="text-[18px] text-[#231f20]"
+                          style={{ fontFamily: "Inter_800ExtraBold" }}
+                        >
+                          +
+                        </Text>
+                      </Pressable>
+                    </View>
+                  </View>
+
+                  <View className="mt-5 gap-4">
+                    {optionGroups.map((group) => (
+                      <View key={group.label} className="gap-2">
+                        <Text
+                          className="text-[14px] text-[#5f5954]"
+                          style={{ fontFamily: "Inter_700Bold" }}
+                        >
+                          {group.label}
+                        </Text>
+                        <View className="flex-row flex-wrap gap-2">
+                          {group.options.map((option) => {
+                            const active = isSelected(group.label, option.label);
+
+                            return (
+                              <Pressable
+                                key={option.id}
+                                className={`rounded-full px-4 py-3 ${
+                                  active ? "bg-[#d80f16]" : "bg-[#faf7f5]"
+                                }`}
+                                hitSlop={10}
+                                onPress={() => selectOption(group.label, option.label)}
+                              >
+                                <Text
+                                  className={`text-[13px] ${
+                                    active ? "text-white" : "text-[#231f20]"
+                                  }`}
+                                  style={{ fontFamily: "Inter_700Bold" }}
+                                >
+                                  {option.label}
+                                </Text>
+                              </Pressable>
+                            );
+                          })}
+                        </View>
+                      </View>
+                    ))}
+                  </View>
+
+                  <TextInput
+                    className="mt-5 min-h-[120px] rounded-2xl bg-[#faf7f5] px-4 py-4 text-[15px] text-[#231f20]"
+                    multiline
+                    onChangeText={setDraftNote}
+                    placeholder={t.configurator.kitchenNote}
+                    placeholderTextColor="#9f9691"
+                    textAlignVertical="top"
+                    value={draftNote}
+                  />
+                </View>
+              </View>
+            </View>
+          </ScrollView>
+
+          <View className="border-t border-[#efe7e3] bg-white px-5 py-4">
+            <View className="flex-row justify-end gap-3">
               <Pressable
-                className="items-center rounded-[22px] bg-[#2fa34f] px-6 py-5"
+                className="min-w-[220px] items-center rounded-[22px] bg-[#d80f16] px-6 py-5"
+                hitSlop={12}
+                onPress={onClose}
+              >
+                <Text
+                  className="text-[17px] text-white"
+                  style={{ fontFamily: "Inter_800ExtraBold" }}
+                >
+                  {t.adminUnlock.cancel}
+                </Text>
+              </Pressable>
+              <Pressable
+                className="min-w-[240px] items-center rounded-[22px] bg-[#2fa34f] px-6 py-5"
                 hitSlop={12}
                 onPress={async () => {
                   await addConfiguredItem({
@@ -265,7 +317,7 @@ export function ProductConfiguratorPreview({
             </View>
           </View>
         </View>
-      </View>
+      </SafeAreaView>
     </Modal>
   );
 }
