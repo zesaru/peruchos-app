@@ -57,7 +57,6 @@ describe("ProductConfiguratorPreview", () => {
     const addButtonText = root
       .findAllByType(Text)
       .find((node: ReactTestInstance) => node.props.children === "Agregar al pedido");
-
     function findPressTarget(node: ReactTestInstance | undefined | null): ReactTestInstance {
       let current = node?.parent;
       while (current && typeof current.props.onPress !== "function") {

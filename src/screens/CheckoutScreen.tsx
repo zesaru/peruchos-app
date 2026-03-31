@@ -57,13 +57,6 @@ export function CheckoutScreen() {
         </View>
 
         <View className="gap-3">
-          <TextInput
-            className="rounded-2xl border border-[#ece7e4] bg-[#faf9f8] px-4 py-4 text-[15px] text-[#1f1f1f]"
-            onChangeText={(customerName) => updateCheckoutDraft({ customerName })}
-            placeholder={t.checkout.customerNamePlaceholder}
-            placeholderTextColor="#9c948e"
-            value={checkoutDraft.customerName}
-          />
           {setupCompleted && assignedTable ? (
             <View className="rounded-2xl border border-[#ece7e4] bg-[#faf9f8] px-4 py-4">
               <Text className="text-[11px] uppercase tracking-[1px] text-[#8c857f]" style={{ fontFamily: "Inter_700Bold" }}>

@@ -116,11 +116,20 @@ export function ProductConfiguratorPreview({
     return selectedOptions.includes(buildOptionValue(groupLabel, optionLabel));
   }
 
+  const summaryEntries = [
+    ...selectedOptions,
+    draftNote.trim().length > 0 ? `${t.configurator.kitchenNote}: ${draftNote.trim()}` : null,
+  ].filter((entry): entry is string => Boolean(entry));
+
+  const ctaSummary = t.configurator.ctaSummary
+    .replace("{quantity}", String(quantity))
+    .replace("{total}", formatJPY(item.price * quantity));
+
   return (
     <Modal animationType="slide" onRequestClose={onClose} visible={visible}>
       <SafeAreaView className="flex-1 bg-[#fff8f7]">
         <View className="flex-1 bg-[#fff8f7]">
-          <View className="flex-row items-center justify-between border-b border-[#efe7e3] px-5 py-4">
+          <View className="border-b border-[#efe7e3] px-5 py-4">
             <View>
               <Text
                 className="text-[12px] uppercase tracking-[1.6px] text-[#d80f16]"
@@ -135,18 +144,6 @@ export function ProductConfiguratorPreview({
                 {item.title}
               </Text>
             </View>
-            <Pressable
-              className="rounded-full bg-[#f3efed] px-4 py-3"
-              hitSlop={12}
-              onPress={onClose}
-            >
-              <Text
-                className="text-[14px] text-[#231f20]"
-                style={{ fontFamily: "Inter_800ExtraBold" }}
-              >
-                {t.adminUnlock.cancel}
-              </Text>
-            </Pressable>
           </View>
 
           <ScrollView
@@ -185,8 +182,14 @@ export function ProductConfiguratorPreview({
                   >
                     {formatJPY(item.price * quantity)}
                   </Text>
+                  <Text
+                    className="mt-1 text-[13px] text-[#8c857f]"
+                    style={{ fontFamily: "Inter_700Bold" }}
+                  >
+                    {formatJPY(item.price)} {t.configurator.priceEach}
+                  </Text>
 
-                  <View className="flex-row items-center justify-between">
+                  <View className="mt-5 flex-row items-center justify-between">
                     <Text
                       className="text-[15px] text-[#5f5954]"
                       style={{ fontFamily: "Inter_700Bold" }}
@@ -243,12 +246,22 @@ export function ProductConfiguratorPreview({
                             return (
                               <Pressable
                                 key={option.id}
-                                className={`rounded-full px-4 py-3 ${
-                                  active ? "bg-[#d80f16]" : "bg-[#faf7f5]"
+                                className={`flex-row items-center gap-2 rounded-full border px-4 py-3 ${
+                                  active
+                                    ? "border-[#d80f16] bg-[#d80f16]"
+                                    : "border-[#ece3de] bg-[#faf7f5]"
                                 }`}
                                 hitSlop={10}
                                 onPress={() => selectOption(group.label, option.label)}
                               >
+                                {active ? (
+                                  <Text
+                                    className="text-[12px] text-white"
+                                    style={{ fontFamily: "Inter_800ExtraBold" }}
+                                  >
+                                    ✓
+                                  </Text>
+                                ) : null}
                                 <Text
                                   className={`text-[13px] ${
                                     active ? "text-white" : "text-[#231f20]"
@@ -269,7 +282,7 @@ export function ProductConfiguratorPreview({
                     className="mt-5 min-h-[120px] rounded-2xl bg-[#faf7f5] px-4 py-4 text-[15px] text-[#231f20]"
                     multiline
                     onChangeText={setDraftNote}
-                    placeholder={t.configurator.kitchenNote}
+                    placeholder={`${t.configurator.kitchenNote} (${t.configurator.noteOptional})`}
                     placeholderTextColor="#9f9691"
                     textAlignVertical="top"
                     value={draftNote}
@@ -280,9 +293,40 @@ export function ProductConfiguratorPreview({
           </ScrollView>
 
           <View className="border-t border-[#efe7e3] bg-white px-5 py-4">
+            <View className="mb-4 gap-2">
+              <Text
+                className="text-[12px] uppercase tracking-[1.4px] text-[#8c857f]"
+                style={{ fontFamily: "Inter_800ExtraBold" }}
+              >
+                {t.configurator.selectionSummary}
+              </Text>
+              <View className="flex-row flex-wrap gap-2">
+                {summaryEntries.length > 0 ? (
+                  summaryEntries.map((entry) => (
+                    <View key={entry} className="rounded-full bg-[#faf7f5] px-3 py-2">
+                      <Text
+                        className="text-[12px] text-[#3d3936]"
+                        style={{ fontFamily: "Inter_700Bold" }}
+                      >
+                        {entry}
+                      </Text>
+                    </View>
+                  ))
+                ) : (
+                  <View className="rounded-full bg-[#faf7f5] px-3 py-2">
+                    <Text
+                      className="text-[12px] text-[#8c857f]"
+                      style={{ fontFamily: "Inter_700Bold" }}
+                    >
+                      {item.category}
+                    </Text>
+                  </View>
+                )}
+              </View>
+            </View>
             <View className="flex-row justify-end gap-3">
               <Pressable
-                className="min-w-[220px] items-center rounded-[22px] bg-[#d80f16] px-6 py-5"
+                className="min-w-[220px] items-center justify-center rounded-[22px] bg-[#d80f16] px-6 py-5"
                 hitSlop={12}
                 onPress={onClose}
               >
@@ -312,6 +356,12 @@ export function ProductConfiguratorPreview({
                   style={{ fontFamily: "Inter_800ExtraBold" }}
                 >
                   {t.configurator.addToOrder}
+                </Text>
+                <Text
+                  className="mt-1 text-[12px] text-white/90"
+                  style={{ fontFamily: "Inter_700Bold" }}
+                >
+                  {ctaSummary}
                 </Text>
               </Pressable>
             </View>

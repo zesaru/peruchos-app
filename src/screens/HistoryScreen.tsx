@@ -88,11 +88,12 @@ export function HistoryScreen() {
                 <View className="flex-row items-start justify-between gap-3">
                   <View>
                     <Text className="text-[18px] text-[#1f1f1f]" style={{ fontFamily: "Inter_800ExtraBold" }}>
-                      {order.draft.customerName || t.history.walkInCustomer}
+                      {order.draft.tableNumber
+                        ? `${t.menu.table} ${order.draft.tableNumber}`
+                        : t.history.noTable}
                     </Text>
                     <Text className="mt-1 text-[12px] text-[#8c857f]" style={{ fontFamily: "Inter_500Medium" }}>
-                      {t.orderType[order.draft.orderType]} • {order.draft.tableNumber || t.history.noTable} •{" "}
-                      {formatTime(order.createdAt)}
+                      {t.orderType[order.draft.orderType]} • {formatTime(order.createdAt)}
                     </Text>
                   </View>
                   <View className={`rounded-full px-3 py-1 ${badge.container}`}>

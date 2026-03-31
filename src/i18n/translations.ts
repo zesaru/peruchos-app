@@ -37,9 +37,13 @@ type TranslationShape = {
   };
   configurator: {
     addToOrder: string;
+    ctaSummary: string;
     kitchenNote: string;
+    noteOptional: string;
     optionIce: string;
     optionRice: string;
+    priceEach: string;
+    selectionSummary: string;
     optionSize: string;
     optionSpice: string;
     valueFullRice: string;
@@ -183,9 +187,13 @@ export const translations: Record<AppLanguage, TranslationShape> = {
     },
     configurator: {
       addToOrder: "Agregar al pedido",
+      ctaSummary: "{quantity} item(s) • {total}",
       kitchenNote: "Nota para cocina",
+      noteOptional: "Opcional",
       optionIce: "Hielo",
       optionRice: "Arroz",
+      priceEach: "cada uno",
+      selectionSummary: "Selección actual",
       optionSize: "Tamaño",
       optionSpice: "Picante",
       valueFullIce: "Hielo normal",
@@ -335,9 +343,13 @@ export const translations: Record<AppLanguage, TranslationShape> = {
     },
     configurator: {
       addToOrder: "Add to order",
+      ctaSummary: "{quantity} item(s) • {total}",
       kitchenNote: "Kitchen note",
+      noteOptional: "Optional",
       optionIce: "Ice",
       optionRice: "Rice",
+      priceEach: "each",
+      selectionSummary: "Current selection",
       optionSize: "Size",
       optionSpice: "Spice",
       valueFullIce: "Regular Ice",
@@ -487,9 +499,13 @@ export const translations: Record<AppLanguage, TranslationShape> = {
     },
     configurator: {
       addToOrder: "注文に追加",
+      ctaSummary: "{quantity} item(s) • {total}",
       kitchenNote: "キッチンメモ",
+      noteOptional: "任意",
       optionIce: "氷",
       optionRice: "ご飯",
+      priceEach: "1点あたり",
+      selectionSummary: "現在の選択",
       optionSize: "サイズ",
       optionSpice: "辛さ",
       valueFullIce: "通常の氷",
