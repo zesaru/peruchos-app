@@ -63,9 +63,69 @@ type TranslationShape = {
     subtotal: string;
     customerNamePlaceholder: string;
     tablePlaceholder: string;
+    assignedTableLabel: string;
     note: string;
     back: string;
     sendOrder: string;
+  };
+  setup: {
+    kicker: string;
+    title: string;
+    description: string;
+    inputLabel: string;
+    inputPlaceholder: string;
+    inputHint: string;
+    continue: string;
+    scanQr: string;
+    errorTitle: string;
+    emptyTableError: string;
+    notFoundError: string;
+    networkError: string;
+  };
+  adminUnlock: {
+    kicker: string;
+    title: string;
+    description: string;
+    descriptionNoTable: string;
+    pinLabel: string;
+    pinPlaceholder: string;
+    cancel: string;
+    continue: string;
+    errorTitle: string;
+    invalidPin: string;
+  };
+  adminSettings: {
+    kicker: string;
+    title: string;
+    tableAssigned: string;
+    noTableAssigned: string;
+    pinSection: string;
+    newPinPlaceholder: string;
+    confirmPinPlaceholder: string;
+    savePin: string;
+    tableSection: string;
+    scanQr: string;
+    reassignTable: string;
+    close: string;
+    errorTitle: string;
+    invalidPinFormat: string;
+    pinMismatch: string;
+    successTitle: string;
+    pinUpdated: string;
+  };
+  scanner: {
+    kicker: string;
+    title: string;
+    description: string;
+    footer: string;
+    processing: string;
+    permissionTitle: string;
+    permissionDescription: string;
+    grantAccess: string;
+    cancel: string;
+    errorTitle: string;
+    notFoundError: string;
+    networkError: string;
   };
   history: {
     screenTitle: string;
@@ -149,9 +209,69 @@ export const translations: Record<AppLanguage, TranslationShape> = {
       subtotal: "subtotal",
       customerNamePlaceholder: "Nombre del cliente",
       tablePlaceholder: "Mesa o código de recojo",
+      assignedTableLabel: "Mesa asignada",
       note: "Nota:",
       back: "Volver",
       sendOrder: "Enviar orden",
+    },
+    setup: {
+      kicker: "Configurar tablet",
+      title: "Asigna esta tablet a una mesa",
+      description: "Ingresa el número de mesa para dejar la experiencia lista para self-order.",
+      inputLabel: "Número de mesa",
+      inputPlaceholder: "Ejemplo: 12 o pega el QR",
+      inputHint: "Acepta número directo, URL del QR o payload pegado.",
+      continue: "Continuar",
+      scanQr: "Escanear QR",
+      errorTitle: "No se pudo continuar",
+      emptyTableError: "Ingresa un número de mesa válido.",
+      notFoundError: "No encontramos esa mesa en el sistema.",
+      networkError: "No pudimos validar la mesa. Revisa la conexión e inténtalo otra vez.",
+    },
+    adminUnlock: {
+      kicker: "Acceso admin",
+      title: "Reconfigurar esta tablet",
+      description: "Ingresa el PIN para liberar la tablet de la mesa {table}.",
+      descriptionNoTable: "Ingresa el PIN para abrir la reconfiguración de la tablet.",
+      pinLabel: "PIN de administrador",
+      pinPlaceholder: "••••",
+      cancel: "Cancelar",
+      continue: "Desbloquear",
+      errorTitle: "PIN incorrecto",
+      invalidPin: "El PIN no es válido.",
+    },
+    adminSettings: {
+      kicker: "Panel admin",
+      title: "Administrar tablet",
+      tableAssigned: "Esta tablet está asignada a la mesa {table}.",
+      noTableAssigned: "Esta tablet aún no tiene mesa asignada.",
+      pinSection: "Cambiar PIN",
+      newPinPlaceholder: "Nuevo PIN",
+      confirmPinPlaceholder: "Confirmar PIN",
+      savePin: "Guardar PIN",
+      tableSection: "Mesa",
+      scanQr: "Escanear QR de mesa",
+      reassignTable: "Reasignar mesa",
+      close: "Cerrar",
+      errorTitle: "No se pudo guardar",
+      invalidPinFormat: "El PIN debe tener entre 4 y 6 dígitos.",
+      pinMismatch: "Los PIN no coinciden.",
+      successTitle: "PIN actualizado",
+      pinUpdated: "El nuevo PIN quedó guardado.",
+    },
+    scanner: {
+      kicker: "Escáner QR",
+      title: "Escanea el QR de la mesa",
+      description: "Apunta la cámara al QR para asignar esta tablet a la mesa correcta.",
+      footer: "Mantén el QR dentro del marco.",
+      processing: "Validando mesa...",
+      permissionTitle: "Permite usar la cámara",
+      permissionDescription: "Necesitamos la cámara para leer el QR de la mesa.",
+      grantAccess: "Permitir cámara",
+      cancel: "Cancelar",
+      errorTitle: "No se pudo asignar la mesa",
+      notFoundError: "El QR no corresponde a una mesa válida.",
+      networkError: "No pudimos validar el QR. Revisa la conexión e inténtalo otra vez.",
     },
     history: {
       screenTitle: "Historial de órdenes",
@@ -241,9 +361,69 @@ export const translations: Record<AppLanguage, TranslationShape> = {
       subtotal: "subtotal",
       customerNamePlaceholder: "Customer name",
       tablePlaceholder: "Table or pickup code",
+      assignedTableLabel: "Assigned table",
       note: "Note:",
       back: "Back",
       sendOrder: "Send order",
+    },
+    setup: {
+      kicker: "Tablet setup",
+      title: "Assign this tablet to a table",
+      description: "Enter the table number once to keep the self-order flow ready for guests.",
+      inputLabel: "Table number",
+      inputPlaceholder: "Example: 12 or paste the QR",
+      inputHint: "Accepts direct table number, QR URL, or pasted payload.",
+      continue: "Continue",
+      scanQr: "Scan QR",
+      errorTitle: "Unable to continue",
+      emptyTableError: "Enter a valid table number.",
+      notFoundError: "We could not find that table in the system.",
+      networkError: "We could not validate the table. Check the connection and try again.",
+    },
+    adminUnlock: {
+      kicker: "Admin access",
+      title: "Reconfigure this tablet",
+      description: "Enter the PIN to release this tablet from table {table}.",
+      descriptionNoTable: "Enter the PIN to open tablet reconfiguration.",
+      pinLabel: "Administrator PIN",
+      pinPlaceholder: "••••",
+      cancel: "Cancel",
+      continue: "Unlock",
+      errorTitle: "Invalid PIN",
+      invalidPin: "The PIN is not valid.",
+    },
+    adminSettings: {
+      kicker: "Admin panel",
+      title: "Manage tablet",
+      tableAssigned: "This tablet is assigned to table {table}.",
+      noTableAssigned: "This tablet does not have a table assigned yet.",
+      pinSection: "Change PIN",
+      newPinPlaceholder: "New PIN",
+      confirmPinPlaceholder: "Confirm PIN",
+      savePin: "Save PIN",
+      tableSection: "Table",
+      scanQr: "Scan table QR",
+      reassignTable: "Reassign table",
+      close: "Close",
+      errorTitle: "Unable to save",
+      invalidPinFormat: "The PIN must contain 4 to 6 digits.",
+      pinMismatch: "The PIN values do not match.",
+      successTitle: "PIN updated",
+      pinUpdated: "The new PIN has been saved.",
+    },
+    scanner: {
+      kicker: "QR scanner",
+      title: "Scan the table QR",
+      description: "Point the camera at the code to assign this tablet to the correct table.",
+      footer: "Keep the QR code inside the frame.",
+      processing: "Validating table...",
+      permissionTitle: "Allow camera access",
+      permissionDescription: "We need the camera to read the table QR code.",
+      grantAccess: "Allow camera",
+      cancel: "Cancel",
+      errorTitle: "Unable to assign table",
+      notFoundError: "The QR code does not match a valid table.",
+      networkError: "We could not validate the QR code. Check the connection and try again.",
     },
     history: {
       screenTitle: "Order History",
@@ -333,9 +513,69 @@ export const translations: Record<AppLanguage, TranslationShape> = {
       subtotal: "小計",
       customerNamePlaceholder: "お客様名",
       tablePlaceholder: "テーブル番号または受取コード",
+      assignedTableLabel: "割り当て済みテーブル",
       note: "メモ:",
       back: "戻る",
       sendOrder: "注文を送信",
+    },
+    setup: {
+      kicker: "タブレット設定",
+      title: "このタブレットをテーブルに割り当てる",
+      description: "テーブル番号を一度入力して、セルフオーダーをすぐ使える状態にします。",
+      inputLabel: "テーブル番号",
+      inputPlaceholder: "例: 12 またはQR内容を貼り付け",
+      inputHint: "テーブル番号、QRのURL、貼り付けたペイロードに対応します。",
+      continue: "続ける",
+      scanQr: "QRをスキャン",
+      errorTitle: "続行できません",
+      emptyTableError: "有効なテーブル番号を入力してください。",
+      notFoundError: "そのテーブルはシステムで見つかりませんでした。",
+      networkError: "テーブルを確認できませんでした。接続を確認して再試行してください。",
+    },
+    adminUnlock: {
+      kicker: "管理者アクセス",
+      title: "このタブレットを再設定する",
+      description: "PINを入力して、テーブル{table}からこの端末を解除します。",
+      descriptionNoTable: "PINを入力してタブレット設定を開きます。",
+      pinLabel: "管理者PIN",
+      pinPlaceholder: "••••",
+      cancel: "キャンセル",
+      continue: "解除する",
+      errorTitle: "PINが違います",
+      invalidPin: "PINが正しくありません。",
+    },
+    adminSettings: {
+      kicker: "管理パネル",
+      title: "タブレット管理",
+      tableAssigned: "このタブレットはテーブル{table}に割り当てられています。",
+      noTableAssigned: "このタブレットにはまだテーブルが割り当てられていません。",
+      pinSection: "PIN変更",
+      newPinPlaceholder: "新しいPIN",
+      confirmPinPlaceholder: "PIN確認",
+      savePin: "PINを保存",
+      tableSection: "テーブル",
+      scanQr: "テーブルQRをスキャン",
+      reassignTable: "テーブルを再割り当て",
+      close: "閉じる",
+      errorTitle: "保存できません",
+      invalidPinFormat: "PINは4〜6桁の数字で入力してください。",
+      pinMismatch: "PINが一致しません。",
+      successTitle: "PIN更新完了",
+      pinUpdated: "新しいPINが保存されました。",
+    },
+    scanner: {
+      kicker: "QRスキャナー",
+      title: "テーブルQRを読み取る",
+      description: "QRコードにカメラを向けて、このタブレットを正しいテーブルに割り当てます。",
+      footer: "QRコードを枠の中に収めてください。",
+      processing: "テーブルを確認中...",
+      permissionTitle: "カメラへのアクセスを許可",
+      permissionDescription: "テーブルQRを読むためにカメラが必要です。",
+      grantAccess: "カメラを許可",
+      cancel: "キャンセル",
+      errorTitle: "テーブルを割り当てできません",
+      notFoundError: "このQRは有効なテーブルに対応していません。",
+      networkError: "QRを確認できませんでした。接続を確認して再試行してください。",
     },
     history: {
       screenTitle: "注文履歴",

@@ -181,6 +181,58 @@ describe("api service behavior", () => {
     });
   });
 
+  it("resolves a table from QR-style URL payloads", async () => {
+    mockFrom.mockImplementation((table: string) => {
+      if (table !== "tables") {
+        throw new Error(`Unexpected table ${table}`);
+      }
+
+      return {
+        select: jest.fn(() => ({
+          eq: jest.fn(() => ({
+            maybeSingle: jest.fn().mockResolvedValue({
+              data: { id: 12, table_number: 12 },
+            }),
+          })),
+        })),
+      };
+    });
+
+    const { resolveTableByNumber } = loadApi();
+    const resolved = await resolveTableByNumber("https://peruchos.app/start?table=12");
+
+    expect(resolved).toEqual({
+      id: 12,
+      tableNumber: "12",
+    });
+  });
+
+  it("resolves a table from JSON QR payloads", async () => {
+    mockFrom.mockImplementation((table: string) => {
+      if (table !== "tables") {
+        throw new Error(`Unexpected table ${table}`);
+      }
+
+      return {
+        select: jest.fn(() => ({
+          eq: jest.fn(() => ({
+            maybeSingle: jest.fn().mockResolvedValue({
+              data: { id: 7, table_number: 7 },
+            }),
+          })),
+        })),
+      };
+    });
+
+    const { resolveTableByNumber } = loadApi();
+    const resolved = await resolveTableByNumber('{"tableNumber":"7"}');
+
+    expect(resolved).toEqual({
+      id: 7,
+      tableNumber: "7",
+    });
+  });
+
   it("returns existing orders unchanged when the fetch fails", async () => {
     const existingOrders: SubmittedOrder[] = [
       {

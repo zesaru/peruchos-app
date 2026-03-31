@@ -19,15 +19,23 @@ import {
 } from "@expo-google-fonts/playfair-display";
 
 import { CheckoutScreen } from "./src/screens/CheckoutScreen";
+import { AdminUnlockScreen } from "./src/screens/AdminUnlockScreen";
+import { AdminSettingsScreen } from "./src/screens/AdminSettingsScreen";
 import { PeruchosLogo } from "./src/components/PeruchosLogo";
 import { HistoryScreen } from "./src/screens/HistoryScreen";
 import { getTranslations } from "./src/i18n/translations";
 import { LanguageScreen } from "./src/screens/LanguageScreen";
 import { MenuScreen } from "./src/screens/MenuScreen";
+import { TableScannerScreen } from "./src/screens/TableScannerScreen";
+import { TableSetupScreen } from "./src/screens/TableSetupScreen";
 import { useAppSettingsStore } from "./src/store/useAppSettingsStore";
 
 export type RootStackParamList = {
   Language: undefined;
+  TableSetup: undefined;
+  TableScanner: undefined;
+  AdminUnlock: undefined;
+  AdminSettings: undefined;
   Menu: undefined;
   Checkout: undefined;
   History: undefined;
@@ -107,6 +115,26 @@ export default function App() {
               <Stack.Screen
                 component={LanguageScreen}
                 name="Language"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                component={TableSetupScreen}
+                name="TableSetup"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                component={TableScannerScreen}
+                name="TableScanner"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                component={AdminUnlockScreen}
+                name="AdminUnlock"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                component={AdminSettingsScreen}
+                name="AdminSettings"
                 options={{ headerShown: false }}
               />
               <Stack.Screen

@@ -5,6 +5,7 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 import { createOrder, fetchOrders } from "../services/api";
+import { useDeviceStore } from "./useDeviceStore";
 import type {
   CartEntry,
   CheckoutDraft,
@@ -266,6 +267,7 @@ export const useCartStore = create<CartStore>()(
       },
       submitOrder: async () => {
         const snapshot = useCartStore.getState();
+        const assignedTable = useDeviceStore.getState().assignedTable;
         if (snapshot.items.length === 0) {
           return null;
         }
@@ -273,7 +275,10 @@ export const useCartStore = create<CartStore>()(
         const createdOrder = await createOrder({
           items: snapshot.items,
           summary: snapshot.summary,
-          draft: snapshot.checkoutDraft,
+          draft: {
+            ...snapshot.checkoutDraft,
+            tableNumber: assignedTable?.tableNumber ?? snapshot.checkoutDraft.tableNumber,
+          },
         });
 
         set((state) => ({

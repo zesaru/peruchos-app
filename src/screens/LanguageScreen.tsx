@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import type { RootStackParamList } from "../../App";
 import { PeruchosLogo } from "../components/PeruchosLogo";
 import { useAppSettingsStore } from "../store/useAppSettingsStore";
+import { useDeviceStore } from "../store/useDeviceStore";
 import type { AppLanguage } from "../types";
 
 const languages = [
@@ -17,6 +18,7 @@ const languages = [
 export function LanguageScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const setLanguage = useAppSettingsStore((state) => state.setLanguage);
+  const setupCompleted = useDeviceStore((state) => state.setupCompleted);
 
   return (
     <SafeAreaView className="flex-1 bg-[#fff8f7] px-6 py-8">
@@ -53,7 +55,7 @@ export function LanguageScreen() {
                 hitSlop={12}
                 onPress={() => {
                   setLanguage(language.code as AppLanguage);
-                  navigation.replace("Menu");
+                  navigation.replace(setupCompleted ? "Menu" : "TableSetup");
                 }}
               >
                 <View className="items-center justify-center">

@@ -1,7 +1,15 @@
 import { categories as fallbackCategories, menuItems } from "../constants/menuData";
 import { getAllCategoryLabel } from "../i18n/translations";
 import { supabase } from "../lib/supabase";
-import type { AppLanguage, CartEntry, CheckoutDraft, FoodItem, OrderStatus, SubmittedOrder } from "../types";
+import type {
+  AppLanguage,
+  AssignedTable,
+  CartEntry,
+  CheckoutDraft,
+  FoodItem,
+  OrderStatus,
+  SubmittedOrder,
+} from "../types";
 
 type CatalogPayload = {
   macroCategories: string[];
@@ -292,8 +300,57 @@ function resolveMacroCategory(menu: MenuRow) {
   return "food";
 }
 
-async function resolveTableId(tableNumber: string) {
-  const parsed = Number.parseInt(tableNumber, 10);
+function parseTableReference(reference: string) {
+  const trimmedReference = reference.trim();
+  if (!trimmedReference) {
+    return null;
+  }
+
+  if (/^\d+$/u.test(trimmedReference)) {
+    return Number.parseInt(trimmedReference, 10);
+  }
+
+  try {
+    const parsedJson = JSON.parse(trimmedReference) as Record<string, unknown>;
+    const candidate =
+      parsedJson.tableNumber ??
+      parsedJson.table_number ??
+      parsedJson.table ??
+      parsedJson.mesa;
+    if (typeof candidate === "number") {
+      return candidate;
+    }
+    if (typeof candidate === "string" && /^\d+$/u.test(candidate.trim())) {
+      return Number.parseInt(candidate.trim(), 10);
+    }
+  } catch {
+    // Ignore and continue trying other formats.
+  }
+
+  try {
+    const url = new URL(trimmedReference);
+    const candidate =
+      url.searchParams.get("table") ??
+      url.searchParams.get("tableNumber") ??
+      url.searchParams.get("table_number") ??
+      url.searchParams.get("mesa");
+    if (candidate && /^\d+$/u.test(candidate.trim())) {
+      return Number.parseInt(candidate.trim(), 10);
+    }
+  } catch {
+    // Ignore and continue trying non-URL patterns.
+  }
+
+  const matchedNumber = trimmedReference.match(/(?:table|mesa)[^\d]{0,4}(\d{1,4})/iu);
+  if (matchedNumber?.[1]) {
+    return Number.parseInt(matchedNumber[1], 10);
+  }
+
+  return null;
+}
+
+export async function resolveTableByNumber(tableReference: string): Promise<AssignedTable | null> {
+  const parsed = parseTableReference(tableReference);
   if (Number.isNaN(parsed)) {
     return null;
   }
@@ -304,7 +361,19 @@ async function resolveTableId(tableNumber: string) {
     .eq("table_number", parsed)
     .maybeSingle<TableRow>();
 
-  return data?.id ?? null;
+  if (!data) {
+    return null;
+  }
+
+  return {
+    id: data.id,
+    tableNumber: String(data.table_number),
+  };
+}
+
+async function resolveTableId(tableNumber: string) {
+  const table = await resolveTableByNumber(tableNumber);
+  return table?.id ?? null;
 }
 
 export async function fetchCatalog(language: AppLanguage): Promise<CatalogPayload> {

@@ -6,12 +6,15 @@ import { formatJPY } from "../lib/currency";
 import { getTranslations } from "../i18n/translations";
 import { useAppSettingsStore } from "../store/useAppSettingsStore";
 import { useCartStore } from "../store/useCartStore";
+import { useDeviceStore } from "../store/useDeviceStore";
 import type { OrderType } from "../types";
 
 export function CheckoutScreen() {
   const navigation = useNavigation();
   const language = useAppSettingsStore((state) => state.language);
   const t = getTranslations(language);
+  const assignedTable = useDeviceStore((state) => state.assignedTable);
+  const setupCompleted = useDeviceStore((state) => state.setupCompleted);
   const summary = useCartStore((state) => state.summary);
   const items = useCartStore((state) => state.items);
   const checkoutDraft = useCartStore((state) => state.checkoutDraft);
@@ -61,13 +64,24 @@ export function CheckoutScreen() {
             placeholderTextColor="#9c948e"
             value={checkoutDraft.customerName}
           />
-          <TextInput
-            className="rounded-2xl border border-[#ece7e4] bg-[#faf9f8] px-4 py-4 text-[15px] text-[#1f1f1f]"
-            onChangeText={(tableNumber) => updateCheckoutDraft({ tableNumber })}
-            placeholder={t.checkout.tablePlaceholder}
-            placeholderTextColor="#9c948e"
-            value={checkoutDraft.tableNumber}
-          />
+          {setupCompleted && assignedTable ? (
+            <View className="rounded-2xl border border-[#ece7e4] bg-[#faf9f8] px-4 py-4">
+              <Text className="text-[11px] uppercase tracking-[1px] text-[#8c857f]" style={{ fontFamily: "Inter_700Bold" }}>
+                {t.checkout.assignedTableLabel}
+              </Text>
+              <Text className="mt-1 text-[18px] text-[#1f1f1f]" style={{ fontFamily: "Inter_800ExtraBold" }}>
+                {t.menu.table} {assignedTable.tableNumber}
+              </Text>
+            </View>
+          ) : (
+            <TextInput
+              className="rounded-2xl border border-[#ece7e4] bg-[#faf9f8] px-4 py-4 text-[15px] text-[#1f1f1f]"
+              onChangeText={(tableNumber) => updateCheckoutDraft({ tableNumber })}
+              placeholder={t.checkout.tablePlaceholder}
+              placeholderTextColor="#9c948e"
+              value={checkoutDraft.tableNumber}
+            />
+          )}
           <View className="flex-row gap-3">
             {(["Dine In", "Pickup"] as OrderType[]).map((type) => {
               const active = checkoutDraft.orderType === type;

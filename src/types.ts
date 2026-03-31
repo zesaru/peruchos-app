@@ -37,6 +37,11 @@ export type CheckoutDraft = {
   orderType: OrderType;
 };
 
+export type AssignedTable = {
+  id: number;
+  tableNumber: string;
+};
+
 export type SubmittedOrder = {
   id: string;
   createdAt: string;

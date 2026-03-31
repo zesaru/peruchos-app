@@ -17,6 +17,7 @@ import { formatJPY } from "../lib/currency";
 import { fetchCatalog } from "../services/api";
 import { useAppSettingsStore } from "../store/useAppSettingsStore";
 import { useCartStore } from "../store/useCartStore";
+import { useDeviceStore } from "../store/useDeviceStore";
 import type { Category, FoodItem } from "../types";
 
 export function MenuScreen() {
@@ -25,6 +26,7 @@ export function MenuScreen() {
   const { isTablet, menuColumns, typeRamp } = useResponsive();
   const language = useAppSettingsStore((state) => state.language);
   const t = getTranslations(language);
+  const assignedTable = useDeviceStore((state) => state.assignedTable);
   const macroLabels = getMacroCategoryLabels(language);
   const allCategoryLabel = getAllCategoryLabel(language);
   const [selectedMacroCategory, setSelectedMacroCategory] = useState("food");
@@ -172,9 +174,14 @@ export function MenuScreen() {
                 <Text className="text-[12px] text-[#8c857f]" style={{ fontFamily: "Inter_500Medium" }}>
                   {t.menu.orderId}: #161
                 </Text>
-                <Text className="text-[12px] text-[#8c857f]" style={{ fontFamily: "Inter_500Medium" }}>
-                  {t.menu.table}: 12
-                </Text>
+                <Pressable
+                  hitSlop={10}
+                  onLongPress={() => navigation.navigate("AdminUnlock")}
+                >
+                  <Text className="text-[12px] text-[#8c857f]" style={{ fontFamily: "Inter_500Medium" }}>
+                    {t.menu.table}: {assignedTable?.tableNumber ?? "--"}
+                  </Text>
+                </Pressable>
               </View>
 
               <View className="flex-row gap-2">
