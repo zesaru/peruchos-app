@@ -247,7 +247,7 @@ export function MenuScreen() {
               <Pressable
                 accessibilityRole="button"
                 className={`items-center rounded-2xl py-4 ${
-                  cartItems.length === 0 ? "bg-[#f0e6e3]" : "bg-[#d80f16]"
+                  cartItems.length === 0 ? "bg-[#f0e6e3]" : "bg-[#2fa34f]"
                 }`}
                 disabled={cartItems.length === 0}
                 hitSlop={14}
