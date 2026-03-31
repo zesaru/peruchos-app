@@ -20,6 +20,14 @@ import { useCartStore } from "../store/useCartStore";
 import { useDeviceStore } from "../store/useDeviceStore";
 import type { Category, FoodItem } from "../types";
 
+function normalizeSearchValue(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase()
+    .trim();
+}
+
 export function MenuScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [query, setQuery] = useState("");
@@ -78,23 +86,22 @@ export function MenuScreen() {
   }, [allCategoryLabel, visibleCategories]);
 
   const filteredItems = useMemo(() => {
-    const byMacro = catalog.filter((item) => item.macroCategory === selectedMacroCategory);
+    const normalizedQuery = normalizeSearchValue(query);
 
-    const byCategory =
-      selectedCategory === allCategoryLabel
+    if (!normalizedQuery) {
+      const byMacro = catalog.filter((item) => item.macroCategory === selectedMacroCategory);
+
+      return selectedCategory === allCategoryLabel
         ? byMacro
         : byMacro.filter((item) => item.category === selectedCategory);
-
-    const trimmedQuery = query.trim().toLowerCase();
-    if (!trimmedQuery) {
-      return byCategory;
     }
 
-    return byCategory.filter((item) => {
-      return (
-        item.title.toLowerCase().includes(trimmedQuery) ||
-        item.description.toLowerCase().includes(trimmedQuery)
+    return catalog.filter((item) => {
+      const searchableText = normalizeSearchValue(
+        [item.title, item.description, item.category].filter(Boolean).join(" ")
       );
+
+      return searchableText.includes(normalizedQuery);
     });
   }, [allCategoryLabel, catalog, query, selectedCategory, selectedMacroCategory]);
 
